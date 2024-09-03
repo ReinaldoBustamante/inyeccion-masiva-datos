@@ -1,4 +1,5 @@
 import { ReportType } from "../domain";
+import axios from 'axios';
 
 interface DataRepositoryProps {
     rootAPIUrl: string;

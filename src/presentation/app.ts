@@ -27,19 +27,17 @@ export class App {
 
     public async start() {
 
-        const reports = await DataService.extractData({
-            rootAPIUrl: this.rootAPIUrl,
-            rootAPIToken: this.rootAPIToken,
-            pageSize: 500
-        })
-        
         console.log(`
         ================================
                Extraccion de datos
         ================================
         `)
-        console.log(`${reports.length} datos extraidos`)
-            
+        const reports = await DataService.extractData({
+            rootAPIUrl: this.rootAPIUrl,
+            rootAPIToken: this.rootAPIToken,
+            pageSize: 500
+        })
+        console.log('done!')
 
         console.log(`
         ================================
@@ -48,36 +46,35 @@ export class App {
         `)
         const cleanReports = reports.map(report => {
             return new ReportEntity(report).toJSON()
-        })
-
-        console.log(`${cleanReports.length} datos limpiados`)
-
-
+        }).filter(report => report.images.length !== 0)
+        console.log('done!')
 
         console.log(`
         ================================
                 Carga de datos
         ================================
         `)
-
-        cleanReports.map(report => {
-            // por cada reporte
-            //descargar sus imagenes
-            ImageService.downloadImage(report.images)
-            //subirlas a strapi (devuelve un array con las ids agregadas)
-            const imagesIds = ImageService.uploadImage()
-            //actualizar reporte con las ids subidas
+        let reportUpload = 1
+        for (const report of cleanReports) {
+            // Descargar las imágenes
+            const imagesPath = await ImageService.downloadImages(report.images);
+            //Subir imagen a backend strapi
+            const ids = await ImageService.uploadImages(imagesPath, this.outAPIUrl, this.outAPIToken)
+            //Subir reporte a backend strapi + relacion con imagenes
             const {images, ...rest} = report
-            
-            const uploadData = {
+            const data = {
                 ...rest,
-                images: imagesIds
+                images: ids
             }
+            //SUBIR MEDIANTE POST EL REPORTE
 
-            // subir uploadData a strapi
+            process.stdout.write(`\rCargando datos: ${reportUpload}/${cleanReports.length}`);
+            reportUpload++
 
-            DataService.uploadData()
-        })
+        }
+        console.log('\ndone!')
+
 
     }
 }
+

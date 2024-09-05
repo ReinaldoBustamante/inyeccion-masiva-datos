@@ -1,6 +1,5 @@
 import { Axios } from "../config/adapters/axios.adapter";
 import { ReportAttributes, ReportType } from "../domain";
-import axios from 'axios';
 
 interface DataRepositoryProps {
     rootAPIUrl: string;

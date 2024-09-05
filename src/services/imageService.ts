@@ -61,7 +61,7 @@ export class ImageService {
         const response = await axios.post(`${outAPIUrl}/api/upload`, form, {
             headers: {
                 ...form.getHeaders(),
-                'Authorization': `Bearer ${outAPIToken}` // Incluye esto si es necesario
+                'Authorization': `Bearer ${outAPIToken}`
             }
         })
 

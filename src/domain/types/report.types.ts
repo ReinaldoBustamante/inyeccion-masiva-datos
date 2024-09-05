@@ -1,6 +1,6 @@
 export interface ReportType {
     id: number
-    attributes: Attributes
+    attributes: ReportAttributes
 }
 
 export interface Comment {
@@ -27,7 +27,7 @@ export interface Label {
     imageCharacteristics: any
 }
 
-export interface Attributes {
+export interface ReportAttributes {
     idGlobal: string
     uuid: string
     weight: number
@@ -39,7 +39,8 @@ export interface Attributes {
     labels: Label[]
     revisado: boolean
     pcr: boolean
-    createdAt: Date
-    updatedAt: Date
-    images: any
+    createdAt?: Date
+    updatedAt?: Date
+    images: any,
+    enterprise?: number
 }

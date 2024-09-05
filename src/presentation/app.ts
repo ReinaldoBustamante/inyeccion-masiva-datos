@@ -67,7 +67,7 @@ export class App {
                 images: ids
             }
             //SUBIR MEDIANTE POST EL REPORTE
-
+            DataService.uploadData(data, this.outAPIUrl, this.outAPIToken)
             process.stdout.write(`\rCargando datos: ${reportUpload}/${cleanReports.length}`);
             reportUpload++
 

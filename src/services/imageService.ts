@@ -10,6 +10,29 @@ export class ImageService {
         fs.writeFileSync(outputPath, response.data);
     }
 
+    private static async deleteImages(): Promise<void> {
+        const dirPath = path.join(__dirname, '..', '..', 'assets', 'img');
+        if (fs.existsSync(dirPath)) {
+            fs.readdir(dirPath, (err, files) => {
+                if (err) {
+                    console.error(`Error al leer la carpeta: ${err}`);
+                    return;
+                }
+
+                files.forEach(file => {
+                    const filePath = path.join(dirPath, file);
+                    fs.unlink(filePath, err => {
+                        if (err) {
+                            console.error(`Error al eliminar el archivo ${filePath}: ${err}`);
+                        }
+                    });
+                });
+            });
+        } else {
+            console.log('La carpeta no existe');
+        }
+    }
+
     public static async downloadImages(urls: string[]): Promise<string[]> {
         const downloadedImages = [];
         const dirPath = path.join(__dirname, '..', '..', 'assets', 'img');
@@ -49,26 +72,5 @@ export class ImageService {
     }
 
 
-    private static async deleteImages(): Promise<void> {
-        const dirPath = path.join(__dirname, '..', '..', 'assets', 'img');
-        if (fs.existsSync(dirPath)) {
-            fs.readdir(dirPath, (err, files) => {
-                if (err) {
-                    console.error(`Error al leer la carpeta: ${err}`);
-                    return;
-                }
-
-                files.forEach(file => {
-                    const filePath = path.join(dirPath, file);
-                    fs.unlink(filePath, err => {
-                        if (err) {
-                            console.error(`Error al eliminar el archivo ${filePath}: ${err}`);
-                        }
-                    });
-                });
-            });
-        } else {
-            console.log('La carpeta no existe');
-        }
-    }
+    
 }

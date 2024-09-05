@@ -1,22 +1,11 @@
-import { ReportType } from "../domain";
+import { Axios } from "../config/adapters/axios.adapter";
+import { ReportAttributes, ReportType } from "../domain";
 import axios from 'axios';
 
 interface DataRepositoryProps {
     rootAPIUrl: string;
     rootAPIToken: string;
     pageSize: number;
-};
-
-interface ReportsResponse {
-    meta: {
-        pagination: {
-            page: number;
-            pageSize: number;
-            pageCount: number;
-            total: number;
-        };
-    };
-    data: ReportType[]; 
 };
 
 export class DataService {
@@ -27,18 +16,12 @@ export class DataService {
         let page = 1;
         const reports: ReportType[] = [];
 
-        while(a){
-            const response = await fetch(`${rootAPIUrl}/api/reports?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=comment,check,disease,labels,images`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${rootAPIToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            const { data, meta } = (await response.json()) as ReportsResponse;
+        while (a) {
+            const response = await Axios.getData(rootAPIUrl, rootAPIToken, page, pageSize)
+            const { data, meta } = response.data;
             reports.push(...data);
 
-            if(page === meta.pagination.pageCount) {
+            if (page === meta.pagination.pageCount) {
                 a = !a;
             };
 
@@ -49,7 +32,12 @@ export class DataService {
     };
 
 
-    public static async uploadData(){
-        console.log('data subida')
+    public static async uploadData(data: ReportAttributes, outAPIUrl: string, outAPIToken: string) {
+        try {
+            await Axios.postData(data, outAPIUrl, outAPIToken)
+            console.log(' Success');
+        } catch (error) {
+            console.error('Error posting data:', error);
+        }
     }
 };

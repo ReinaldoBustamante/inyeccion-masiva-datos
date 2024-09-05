@@ -3,8 +3,8 @@
 ## instalación
 1. Clonar el repositorio
 ```
-git clone https://github.com/tu-usuario/tu-repo.git
-cd tu-repo
+git clone https://github.com/ReinaldoBustamante/inyeccion-masiva-datos.git
+cd inyeccion-masiva-datos
 ```
 
 2. instalar dependencias
